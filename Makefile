@@ -1,13 +1,13 @@
-CC=			gcc
-#CC=			clang --analyze
-CFLAGS=		-g -Wall -Wno-unused-function -O2
+CC=			nvcc
+#CC=		clang --analyze
+CFLAGS=		-O2
 WRAP_MALLOC=-DUSE_MALLOC_WRAPPERS
 AR=			ar
 DFLAGS=		-DHAVE_PTHREAD $(WRAP_MALLOC)
 LOBJS=		utils.o kthread.o kstring.o ksw.o bwt.o bntseq.o bwa.o bwamem.o bwamem_pair.o bwamem_extra.o malloc_wrap.o \
 			QSufSort.o bwt_gen.o rope.o rle.o is.o bwtindex.o
-AOBJS=		bwashm.o bwase.o bwaseqio.o bwtgap.o bwtaln.o bamlite.o \
-			bwape.o kopen.o pemerge.o maxk.o \
+AOBJS=		bwashm.o bwamem_extra.o bwase.o bwtindex.o bwaseqio.o bwtgap.o bwtaln.o bamlite.o \
+			kthread.o bwape.o kopen.o pemerge.o maxk.o \
 			bwtsw2_core.o bwtsw2_main.o bwtsw2_aux.o bwt_lite.o \
 			bwtsw2_chain.o fastmap.o bwtsw2_pair.o
 PROG=		bwa
@@ -19,9 +19,9 @@ ifeq ($(shell uname -s),Linux)
 	LIBS += -lrt
 endif
 
-.SUFFIXES:.c .o .cc
+.SUFFIXES:.cu .o .cc .c
 
-.c.o:
+.cu.o:
 		$(CC) -c $(CFLAGS) $(DFLAGS) $(INCLUDES) $< -o $@
 
 all:$(PROG)
@@ -49,8 +49,8 @@ bntseq.o: bntseq.h utils.h kseq.h malloc_wrap.h khash.h
 bwa.o: bntseq.h bwa.h bwt.h ksw.h utils.h kstring.h malloc_wrap.h kvec.h
 bwa.o: kseq.h
 bwamem.o: kstring.h malloc_wrap.h bwamem.h bwt.h bntseq.h bwa.h ksw.h kvec.h
-bwamem.o: ksort.h utils.h kbtree.h
-bwamem_extra.o: bwa.h bntseq.h bwt.h bwamem.h kstring.h malloc_wrap.h
+bwamem.o: bwamem_extra.h ksort.h utils.h kbtree.h
+bwamem_extra.o: bwamem_extra.h bwa.h bntseq.h bwt.h bwamem.h kstring.h malloc_wrap.h
 bwamem_pair.o: kstring.h malloc_wrap.h bwamem.h bwt.h bntseq.h bwa.h kvec.h
 bwamem_pair.o: utils.h ksw.h
 bwape.o: bwtaln.h bwt.h kvec.h malloc_wrap.h bntseq.h utils.h bwase.h bwa.h

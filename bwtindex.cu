@@ -46,6 +46,7 @@
 #  include "malloc_wrap.h"
 #endif
 
+//#include "bwt_gen.h"
 
 int is_bwt(ubyte_t *T, int n);
 
@@ -244,7 +245,7 @@ int bwa_index(int argc, char *argv[]) // the "index" command
 		return 1;
 	}
 	if (prefix == 0) {
-		prefix = malloc(strlen(argv[optind]) + 4);
+		prefix = (char*)malloc(strlen(argv[optind]) + 4);
 		strcpy(prefix, argv[optind]);
 		if (is_64) strcat(prefix, ".64");
 	}
@@ -256,6 +257,7 @@ int bwa_index(int argc, char *argv[]) // the "index" command
 int bwa_idx_build(const char *fa, const char *prefix, int algo_type, int block_size)
 {
 	extern void bwa_pac_rev_core(const char *fn, const char *fn_rev);
+	//extern void bwt_bwtgen2(const char *fn_pac, const char *fn_bwt, int block_size);
 
 	char *str, *str2, *str3;
 	clock_t t;

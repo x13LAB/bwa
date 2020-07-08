@@ -18,7 +18,7 @@ typedef struct kt_for_t {
 	int n_threads;
 	long n;
 	ktf_worker_t *w;
-	void (*func)(void*,long,int);
+	void (*func)(void*,int,int);
 	void *data;
 } kt_for_t;
 
@@ -46,7 +46,8 @@ static void *ktf_worker(void *data)
 	pthread_exit(0);
 }
 
-void kt_for(int n_threads, void (*func)(void*,long,int), void *data, long n)
+//TODO x13LAB: is "void (*func)(void*,long,int)" not better?
+void kt_for(int n_threads, void (*func)(void*,int,int), void *data, long n)
 {
 	int i;
 	kt_for_t t;
