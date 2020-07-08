@@ -4,6 +4,8 @@
 #include "bntseq.h"
 #include "kstring.h"
 
+#include "bwamem_extra.h"
+
 /***************************
  * SMEM iterator interface *
  ***************************/
