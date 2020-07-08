@@ -293,3 +293,20 @@ double realtime()
 	gettimeofday(&tp, &tzp);
 	return tp.tv_sec + tp.tv_usec * 1e-6;
 }
+
+
+void cuda_details() {
+	int nDevices;
+	
+	fprintf(stderr, "GPU information:\n");
+	cudaGetDeviceCount(&nDevices);
+	for (int i = 0; i < nDevices; i++) {
+		cudaDeviceProp prop;
+		cudaGetDeviceProperties(&prop, i);
+		fprintf(stderr, "Device Number: %d\n", i);
+		fprintf(stderr, "  Device name: %s\n", prop.name);
+		fprintf(stderr, "  Memory Clock Rate (KHz): %d\n", prop.memoryClockRate);
+		fprintf(stderr, "  Memory Bus Width (bits): %d\n", prop.memoryBusWidth);
+		fprintf(stderr, "  Peak Memory Bandwidth (GB/s): %f\n\n", 2.0*prop.memoryClockRate*(prop.memoryBusWidth/8)/1.0e6);
+	}
+}

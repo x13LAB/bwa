@@ -108,4 +108,6 @@ static inline uint64_t hash_64(uint64_t key)
 	return key;
 }
 
+void cuda_details();
+
 #endif
