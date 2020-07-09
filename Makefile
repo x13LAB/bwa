@@ -1,6 +1,6 @@
 CC=			nvcc
 #CC=		clang --analyze
-CFLAGS=		-O2
+CFLAGS=		-O2 -gencode=arch=compute_52,code=sm_52 
 WRAP_MALLOC=-DUSE_MALLOC_WRAPPERS
 AR=			ar
 DFLAGS=		-DHAVE_PTHREAD $(WRAP_MALLOC)

@@ -179,6 +179,9 @@ extern "C" {
 	 * @param pes    inferred insert size distribution (output)
 	 */
 	void mem_pestat(const mem_opt_t *opt, int64_t l_pac, int n, const mem_alnreg_v *regs, mem_pestat_t pes[4]);
+	
+	__global__
+	void worker1_cuda(void *data, int i, int tid);
 
 #ifdef __cplusplus
 }

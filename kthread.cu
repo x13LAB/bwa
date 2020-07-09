@@ -61,6 +61,11 @@ void kt_for(int n_threads, void (*func)(void*,int,int), void *data, long n)
 	for (i = 0; i < n_threads; ++i) pthread_join(tid[i], 0);
 }
 
+void kt_for_cuda(int n_threads, void (*func)(void*,int,int), void *data, long n)
+{
+	func(NULL, 0, 0);
+}
+
 /*****************
  * kt_pipeline() *
  *****************/

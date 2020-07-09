@@ -1054,6 +1054,12 @@ void mem_reg2sam(const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac, 
 	}
 }
 
+
+__device__
+void mem_align1_core_cuda(const mem_opt_t *opt, const bwt_t *bwt, const bntseq_t *bns, const uint8_t *pac, int l_seq, char *seq, void *buf, mem_alnreg_v *regs)
+{
+}
+
 mem_alnreg_v mem_align1_core(const mem_opt_t *opt, const bwt_t *bwt, const bntseq_t *bns, const uint8_t *pac, int l_seq, char *seq, void *buf)
 {
 	int i;
@@ -1190,6 +1196,17 @@ static void worker1(void *data, int i, int tid)
 	}
 }
 
+__global__
+void worker1_cuda(void *data, int i, int tid)
+{
+	worker_t *w = (worker_t*)data;
+	if (!(w->opt->flag&MEM_F_PE)) {
+		mem_align1_core_cuda(w->opt, w->bwt, w->bns, w->pac, w->seqs[i].l_seq, w->seqs[i].seq, w->aux[tid], &w->regs[i]);
+	} else {
+		//fprintf(stderr, "[M::%s::x13LAB] TODO: double paired reads not implemented!\n");
+	}
+}
+
 static void worker2(void *data, int i, int tid)
 {
 	extern int mem_sam_pe(const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac, const mem_pestat_t pes[4], uint64_t id, bseq1_t s[2], mem_alnreg_v a[2]);
@@ -1225,7 +1242,7 @@ void mem_process_seqs(const mem_opt_t *opt, const bwt_t *bwt, const bntseq_t *bn
 	w.aux = (smem_aux_t**)malloc(opt->n_threads * sizeof(smem_aux_t));
 	for (i = 0; i < opt->n_threads; ++i)
 		w.aux[i] = smem_aux_init();
-	kt_for(opt->n_threads, worker1, &w, (opt->flag&MEM_F_PE)? n >> 1 : n); // find mapping positions
+	kt_for_cuda(opt->n_threads, worker1, &w, (opt->flag&MEM_F_PE)? n >> 1 : n); // find mapping positions
 	for (i = 0; i < opt->n_threads; ++i)
 		smem_aux_destroy(w.aux[i]);
 	free(w.aux);
